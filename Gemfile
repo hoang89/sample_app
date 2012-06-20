@@ -4,6 +4,7 @@ gem 'rails', '3.2.6'
 gem 'pg' # use postgre sql database for all enviroment of application
 gem 'bootstrap-sass', '2.0.0' # use this for bootstrap css library and sass css format
 gem 'bcrypt-ruby', '3.0.1' # use this for encrypt password
+
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 group :development,  :test do
@@ -35,6 +36,7 @@ group :test do
   gem 'rb-inotify', '0.8.8'
   gem 'libnotify', '0.5.9'
   gem 'annotate', '~> 2.4.1.beta'
+  gem 'factory_girl_rails', '1.4.0' # use this to init a object
 end
 
 # To use ActiveModel has_secure_password
