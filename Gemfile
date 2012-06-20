@@ -1,16 +1,18 @@
 	source 'https://rubygems.org'
 
 gem 'rails', '3.2.6'
-gem 'pg'
-gem 'bootstrap-sass', '2.0.0'
+gem 'pg' # use postgre sql database for all enviroment of application
+gem 'bootstrap-sass', '2.0.0' # use this for bootstrap css library and sass css format
+gem 'bcrypt-ruby', '3.0.1' # use this for encrypt password
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 group :development,  :test do
 
-gem 'rspec-rails', '2.10.0'
-gem 'guard-rspec', '0.5.5'
-gem 'guard-spork', '0.3.2'
+gem 'rspec-rails', '2.10.0' # use it for test
+gem 'guard-rspec', '0.5.5' # use it for realtime test
+gem 'guard-spork', '0.3.2' # use it for improve realtime test speed
 gem 'spork', '0.9.0'
+gem 'annotate', '~> 2.4.1.beta' # use it for annotating database
 
 end
 
@@ -32,6 +34,7 @@ group :test do
   gem 'capybara', '1.1.2'
   gem 'rb-inotify', '0.8.8'
   gem 'libnotify', '0.5.9'
+  gem 'annotate', '~> 2.4.1.beta'
 end
 
 # To use ActiveModel has_secure_password
