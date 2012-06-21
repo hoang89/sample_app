@@ -23,5 +23,10 @@ class User < ActiveRecord::Base
   validates :password_confirmation , presence: true
   validates :password , presence: true, length: { minimum: 6 }
   before_save { self.email = self.email.downcase }
-  
+  before_save :create_remember_token
+
+  private 
+  def create_remember_token
+    self.remember_token = SecureRandom.urlsafe_base64
+  end
 end
