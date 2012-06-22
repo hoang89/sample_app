@@ -175,4 +175,15 @@ describe "signup" do
       end
     end
   end
+
+  describe "signed in" do
+      let(:user) { FactoryGirl.create(:user) }
+      before { sign_in user}
+       describe "user cannot create new " do
+         before { visit signup_path }
+         it { should have_content('Welcome to the sample app') }
+         # specify { response.should_not redirect_to(root_path) }
+       end
+      
+  end
 end

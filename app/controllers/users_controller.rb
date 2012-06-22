@@ -3,6 +3,7 @@ class UsersController < ApplicationController
 	 before_filter :correct_user,   only: [:edit, :update]
 	 before_filter :admin_user,     only: :destroy
 	 before_filter :delete_himself, only: :destroy
+	 before_filter :user_signed_in, only: [:new]
 	def index
 		
 		@users = User.paginate(page: params[:page], per_page: 30)
@@ -71,5 +72,9 @@ class UsersController < ApplicationController
     def delete_himself
     	@del_user = User.find(params[:id])
     	redirect_to(root_path) if  @del_user.admin?
+    end
+
+    def user_signed_in
+    	redirect_to root_path  if signed_in?
     end
 end
