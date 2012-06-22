@@ -4,6 +4,9 @@ gem 'rails', '3.2.6'
 gem 'pg' # use postgre sql database for all enviroment of application
 gem 'bootstrap-sass', '2.0.0' # use this for bootstrap css library and sass css format
 gem 'bcrypt-ruby', '3.0.1' # use this for encrypt password
+gem 'faker', '1.0.1' # create fake user for ddb
+gem 'will_paginate', '3.0.3' # use it to help use pagination the results  
+gem 'bootstrap-will_paginate', '0.0.6'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
