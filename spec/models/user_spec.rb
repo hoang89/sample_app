@@ -20,8 +20,17 @@ describe User do
   it { should respond_to(:password) }
   it { should respond_to(:password_confirmation) }
   it { should respond_to(:remember_token)}
+  it { should respond_to(:admin) }
   it { should respond_to(:authenticate) }
   it { should be_valid }
+  it { should_not be_admin }
+
+  # check if user is admin
+  describe "with admin attribute set to 'true'" do
+    before { @user.toggle!(:admin) }
+
+    it { should be_admin }
+  end
 
   # Check name is not present: to do this it must have present validates on model
   describe "when the name is not present " do
@@ -64,6 +73,7 @@ describe User do
   	it { should_not be_valid }
   end
 
+  # check format of email
   describe "when email format is invalid" do
   	it "should be invalid " do
   		addresses = %w[user@foo,com user_at_foo.org example.user@foo.
@@ -85,6 +95,7 @@ describe User do
     end
   end
 
+  # check if email was used
   describe "when email addresss is already taken" do
   	before do
   		user_with_same_email = @user.dup
@@ -94,6 +105,7 @@ describe User do
   	it { should_not be_valid }
   end
 
+  # check user was exist on system and ready to sign in
   describe "return value of authenticate method" do
     before { @user.save }
     let(:found_user) { User.find_by_email(@user.email) }
