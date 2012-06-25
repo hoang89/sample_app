@@ -12,7 +12,9 @@
 class User < ActiveRecord::Base
   # if attr not accessible we cannot  direct init value for it
   attr_accessible :email, :name, :password, :password_confirmation
+  has_many :microposts, dependent: :destroy
   has_secure_password
+
   validates :name, presence: true , length: { maximum: 50 }
   # Comment for REGEX
   # / match start of regex
@@ -25,6 +27,11 @@ class User < ActiveRecord::Base
   validates :password , presence: true, length: { minimum: 6 }
   before_save { self.email = self.email.downcase }
   before_save :create_remember_token
+
+  def feed
+    # This is preliminary. See "Following users" for the full implementation.
+    Micropost.where("user_id = ?", id)
+  end
 
   private 
   def create_remember_token

@@ -73,6 +73,19 @@ describe "AuthenticationPages" do
 
       end
 
+      describe "in the Microposts controller" do
+
+        describe "submitting to the create action" do
+          before { post microposts_path }
+          specify { response.should redirect_to(signin_path) }
+        end
+
+        describe "submitting to the destroy action" do
+          before { delete micropost_path(FactoryGirl.create(:micropost)) }
+          specify { response.should redirect_to(signin_path) }
+        end
+      end
+
       describe "when attempting to visit a protected page" do
         before do
           visit edit_user_path(user)
@@ -85,9 +98,20 @@ describe "AuthenticationPages" do
             page.should have_selector('h1',text: 'Edit profile')
           end
         end
+
+         # check when user sigin again
+        describe "when user signin again" do
+          before { sign_in user }
+          it "should render the default (profile) page" do
+              page.should have_selector('title', text: user.name) 
+          end
+        end
+
+
       end
   end
 
+  # check for delete action
   describe "as non-admin user" do
       let(:user) { FactoryGirl.create(:user) }
       let(:non_admin) { FactoryGirl.create(:user) }
@@ -108,4 +132,6 @@ describe "AuthenticationPages" do
         specify { response.should redirect_to(root_path) }
       end
   end
+
+ 
 end

@@ -50,6 +50,7 @@ subject{ page }
       end
     end
 
+    # Check just admin can see delete links
     describe "delete links" do
 
       it { should_not have_link('delete') }
@@ -70,28 +71,38 @@ subject{ page }
       end
   end
 
+  # check for content of sign up page
   describe "signup pages" do
   	before{ visit signup_path }
     it { should have_selector('h1',:text => "Sign up")}
     it { should have_selector('title',text: 'Sign up') }
   end
 
+  # check for content of profile page
   describe "profile page" do
   # Code to make a user variable
   let(:user) { FactoryGirl.create(:user) }
-  #let(:user) { User.find(44) }
+  let!(:m1) { FactoryGirl.create(:micropost, user: user, content: "Test content 1") }
+  let!(:m2) { FactoryGirl.create(:micropost, user: user, content: "Test content 2") }
+  
   before { visit user_path(user) }
 
   it { should have_selector('h1', text: user.name) }
   it { should have_selector('title', text: user.name) }
+  describe "microposts" do
+      it { should have_content(m1.content) }
+      it { should have_content(m2.content) }
+      it { should have_content(user.microposts.count) }
+    end
 end
 
+# check for sign up validation
 describe "signup" do
 
     before { visit signup_path }
 
     let(:submit) { "Create my account" }
-
+    # for valid info
     describe "with invalid information" do
       it "should not create a user" do
         expect { click_button submit }.not_to change(User, :count)
@@ -103,6 +114,7 @@ describe "signup" do
       end
     end
 
+    # for invalid info
     describe "with valid information" do
       before do
         fill_in "Name",         with: "Example User"
@@ -110,7 +122,7 @@ describe "signup" do
         fill_in "Password",     with: "foobar"
         fill_in "Confirmation", with: "foobar"
       end
-
+      # for content after sign up success
       describe "after saving the user" do
         before { click_button submit }
         let(:user) { User.find_by_email('user@example.com') }
@@ -120,8 +132,9 @@ describe "signup" do
         it { should have_link('Sign out') }
       end
     end
-
   end
+
+  # check for edit action
   describe "edit action" do
     let(:user) { FactoryGirl.create(:user) }
     before do 
@@ -158,7 +171,7 @@ describe "signup" do
       specify { user.reload.name.should  == new_name }
       specify { user.reload.email.should == new_email }
     end
-
+    
     describe "as wrong user" do
       let(:user) { FactoryGirl.create(:user) }
       let(:wrong_user) { FactoryGirl.create(:user, email: "wrong@example.com") }
@@ -179,11 +192,16 @@ describe "signup" do
   describe "signed in" do
       let(:user) { FactoryGirl.create(:user) }
       before { sign_in user}
-       describe "user cannot create new " do
-         before { visit signup_path }
-         it { should have_content('Welcome to the sample app') }
-         # specify { response.should_not redirect_to(root_path) }
-       end
+         describe "user cannot create new " do
+           before { put signup_path }
+           it { should have_content('sample app') }
+           specify { response.should redirect_to(root_path) }
+         end
       
+        describe "user cannot use create action " do
+          before { put signup_path }
+          it { should have_content('sample app') }
+          specify { response.should redirect_to(root_path) }
+        end
   end
 end
