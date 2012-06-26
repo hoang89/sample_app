@@ -15,3 +15,4 @@
 /tmp
 # Ignore the bundle file	
 bundler_stubs/
+example_user.rb~
