@@ -28,23 +28,46 @@ describe "StaticPages" do
         visit root_path
       end
 
+      it "should have count content" do
+        should have_content( user.feed.count )
+      end
+
       it "should render the user's feed" do
         user.feed.each do |item|
-          page.should have_selector("li##{item.id}", text: item.content)
+          should have_selector("li##{item.id}", text: item.content)
         end
+      end
+      describe "follower/following counts" do
+        let(:other_user) { FactoryGirl.create(:user) }
+        before do
+          other_user.follow!(user)
+          visit root_path
+        end
+
+        it { should have_link("0 following", href: following_user_path(user)) }
+        it { should have_link("1 followers", href: followers_user_path(user)) }
+      end
+
+      describe "visit other user path" do
+        let(:other_user) { FactoryGirl.create(:user) }
+        before do
+          FactoryGirl.create(:micropost,user: other_user,content: "Test for other")
+          visit user_path(other_user)
+        end
+        it { should_not have_link('delete') }
       end
 
         # test for clicking on a link in the home page
-    it "should have the right links on the layout" do
-      visit root_path
-      click_link "About"
-      page.should have_selector 'title', text: full_title('About Us')
-      click_link "Help"
-      page.should  have_selector 'title', text: full_title('Help')
-      click_link "Contact"
-      page.should  have_selector 'title', text: full_title('Contact Us')
-      click_link "Home"
-    end
+      it "should have the right links on the layout" do
+        visit root_path
+        click_link "About"
+        page.should have_selector 'title', text: full_title('About Us')
+        click_link "Help"
+        page.should  have_selector 'title', text: full_title('Help')
+        click_link "Contact"
+        page.should  have_selector 'title', text: full_title('Contact Us')
+        click_link "Home"
+      end
     end
   end
 

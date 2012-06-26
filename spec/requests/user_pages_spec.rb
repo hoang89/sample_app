@@ -1,6 +1,6 @@
 	require 'spec_helper'
 
-describe "UserPages" do
+describe "User Pages" do
 subject{ page }
   # check index page should have list of user
   describe "index" do
@@ -203,5 +203,33 @@ describe "signup" do
           it { should have_content('sample app') }
           specify { response.should redirect_to(root_path) }
         end
+  end
+
+  describe "following/followers" do
+    let(:user) { FactoryGirl.create(:user) }
+    let(:other_user) { FactoryGirl.create(:user) }
+    before { user.follow!(other_user) }
+
+    describe "followed users" do
+      before do
+        sign_in user
+        visit following_user_path(user)
+      end
+
+      it { should have_selector('title', text: full_title('Following')) }
+      it { should have_selector('h3', text: 'Following') }
+      it { should have_link(other_user.name, href: user_path(other_user)) }
+    end
+
+    describe "followers" do
+      before do
+        sign_in other_user
+        visit followers_user_path(other_user)
+      end
+
+      it { should have_selector('title', text: full_title('Followers')) }
+      it { should have_selector('h3', text: 'Followers') }
+      it { should have_link(user.name, href: user_path(user)) }
+    end
   end
 end
